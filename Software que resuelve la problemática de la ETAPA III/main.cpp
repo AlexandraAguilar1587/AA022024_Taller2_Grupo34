@@ -3,71 +3,75 @@
 
 using namespace std;
 
-void intercambiarValores(int* primerElemento, int* segundoElemento);
-void heapificar(int* listaSalarios, int tamanio, int nodoActual);
-void heapSort(int* listaSalarios, int tamanio);
-void mostrarSalarios(int* listaSalarios, int tamanio);
+void intercambiar(int* primerElemento, int* segundoElemento);         
+void restaurarHeap(int* listaSalarios, int tamanio, int nodoActual);  
+void ordenarHeap(int* listaSalarios, int tamanio);                   
+void mostrarSalarios(int* listaSalarios, int tamanio);                
 
-int main() 
+int main()                                                                                  
 {
-    try {
-        // Limpiamos la consola
-        system("cls");
-        heapSort(listaSalarios, numSalarios);
-        cout << "<-- Listado de salarios ordenados de forma descendente -->\n" << endl;
-        mostrarSalarios(listaSalarios, numSalarios);
-        cout << "\n<-- Lista de salarios ha sido mostrada por completo -->\n" << endl;
-    } catch (const exception& e) {
-        cout << "Ha ocurrido un error: " << e.what() << endl;
+    try {                                                                                   
+        system("cls");                                                                      
+        ordenarHeap(listaSalarios, numSalarios);                                            
+        cout << "<-- Listado de salarios ordenados de forma descendente -->\n" << endl;    
+        mostrarSalarios(listaSalarios, numSalarios);                                        
+        cout << "\n<-- Lista de salarios ha sido mostrada por completo -->\n" << endl;      
+    } catch (const exception& e) {                                                          
+        cout << "Ha ocurrido un error: " << e.what() << endl;                               
     }
-    return 0;
+    return 0;                                                                               
 }
 
 // Ordenamos la lista de salarios en orden descendente
-void heapSort(int* listaSalarios, int tamanio) {
+void ordenarHeap(int* listaSalarios, int tamanio) {
     int i = tamanio / 2 - 1;
     while (i >= 0) {
-        heapificar(listaSalarios, tamanio, i);
+        restaurarHeap(listaSalarios, tamanio, i);
         i--;
     }
     int j = tamanio - 1;
     while (j > 0) {
-        intercambiarValores(listaSalarios, listaSalarios + j);
-        heapificar(listaSalarios, j, 0);
+        intercambiar(listaSalarios, listaSalarios + j);
+        restaurarHeap(listaSalarios, j, 0);
         j--;
     }
 }
 
 // Intercambiamos los valores utilizando punteros
-void intercambiarValores(int* primerElemento, int* segundoElemento) {
-    int temp = *primerElemento;
+void intercambiar(int* primerElemento, int* segundoElemento) {
+    int aux = *primerElemento;
     *primerElemento = *segundoElemento;
-    *segundoElemento = temp;
+    *segundoElemento = aux;
 }
 
-// Aseguramos que el subarbol con la raiz en el nodoActual cumpla Max-Heap.
-void heapificar(int* listaSalarios, int tamanio, int nodoActual) {
-    int* nodoMayor = listaSalarios + nodoActual;  
-    int* hijoIzquierdo = listaSalarios + 2 * nodoActual + 1;  
-    int* hijoDerecho = listaSalarios + 2 * nodoActual + 2;  
+// Aseguramos que el subarbol con la raiz en el nodoActual cumpla las propiedades de heap.
+void restaurarHeap(int* listaSalarios, int tamanio, int nodoActual) {
+    int aux = listaSalarios[nodoActual];
+    int hijoIzquierdo = 2 * nodoActual + 1;
 
-    if (2 * nodoActual + 1 < tamanio) {
-        if (*hijoIzquierdo > *nodoMayor) {
-            nodoMayor = hijoIzquierdo;
+    while (hijoIzquierdo < tamanio) {
+        int hijoDerecho = hijoIzquierdo + 1;
+        int hijoMayor = hijoIzquierdo;
+
+        if (hijoDerecho < tamanio) {
+            if (listaSalarios[hijoDerecho] > listaSalarios[hijoIzquierdo])
+            {
+                hijoMayor = hijoDerecho;
+            }
+        }
+
+        if (listaSalarios[hijoMayor] > aux) {
+            listaSalarios[nodoActual] = listaSalarios[hijoMayor];
+            nodoActual = hijoMayor;
+            hijoIzquierdo = 2 * nodoActual + 1;
+        } else {
+            break;
         }
     }
-
-    if (2 * nodoActual + 2 < tamanio) {
-        if (*hijoDerecho > *nodoMayor) {
-            nodoMayor = hijoDerecho;
-        }
-    }
-
-    if (nodoMayor != listaSalarios + nodoActual) {
-        intercambiarValores(listaSalarios + nodoActual, nodoMayor);
-        heapificar(listaSalarios, tamanio, nodoMayor - listaSalarios);
-    }
+    
+    listaSalarios[nodoActual] = aux;
 }
+
 
 // Mostramos la lista ordenada en la consola 
 void mostrarSalarios(int* listaSalarios, int tamanio) {

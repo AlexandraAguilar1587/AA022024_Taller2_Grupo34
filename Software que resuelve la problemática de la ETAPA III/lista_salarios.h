@@ -1,6 +1,8 @@
 #ifndef LISTA_SALARIOS_H
 #define LISTA_SALARIOS_H
+
 const int numSalarios = 1000;
+
 // Aqui agregue los 1000 salarios quemados hay 10 salarios por cada fila 
 int listaSalarios[numSalarios] = {
     3466, 1694, 1850, 2452, 2246, 2475, 862, 521, 568, 459, 
@@ -104,4 +106,5 @@ int listaSalarios[numSalarios] = {
     3355, 3305, 1079, 3642, 3252, 1626, 844, 543, 2216, 1020, 
     1347, 1254, 2016, 2427, 968, 3068, 1860, 1289, 3207, 990, 
 };
+
 #endif
